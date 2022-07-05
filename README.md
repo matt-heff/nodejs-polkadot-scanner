@@ -16,3 +16,6 @@ RPC_ADDRESS=wss://rpc.polkadot.io
 
 //To run the service
 ts-node server.ts
+
+You can currently view this demo at http://chamber-torso.bnr.la:8087/
+Reliability of it is not gauranteed
