@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polkadot Scanner - Via NodeJS</title>
+
+</head>
+
+<body>
+    <style>
+        #pagebody,#pageheader {
+          text-align: center;
+        }
+        #menu{
+          text-align:right;
+        }
+        #pagebody input{
+          margin:10px;
+        }
+        #submit{
+          margin:10px;
+        }
+        #resultsContainer textarea{
+          width:600px;height:400px;
+        }
+    </style>
+    <script type="text/javascript">
+      // Get Latest Block Number
+      // Populate Block items
+      // Enable Submit
+
+      async function getLatestBlockNumber() {
+          const options = {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          };
+          console.log("Attempting to retrieve latest block");
+
+          try {
+              let res = await fetch(`/latestblock`, options);
+              let resJson = await res.json();
+              console.log(`Attempt: Success --  Block Number: ${resJson.block}`);
+              document.getElementById("endBlock").value = resJson.block;
+              document.getElementById("startBlock").value = resJson.block - 5;
+              document.getElementById("submit").disabled = false;
+              document.getElementById("results").value = "Press Scan to load results, please not the more blocks you scan the long the load time.";
+          } catch (e) {
+              console.log("Attempt: Failed");
+          }
+      }
+
+      getLatestBlockNumber();
+
+      // Handle submit
+      // Request data from Node.js
+      //
+
+      async function submitClick(){
+        await getBlockScanResults();
+      }
+
+      async function getBlockScanResults() {
+        document.getElementById("submit").disabled = true;
+          const options = {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          };
+
+          const startBlock = document.getElementById("startBlock").value;
+          const endBlock = document.getElementById("endBlock").value;
+          const rpcAddress = document.getElementById("rpcAddress").value;
+
+          console.log(`Attempting to retrieve information from block #${startBlock} - #${endBlock} at RPC : ${rpcAddress}`);
+
+          try {
+              document.getElementById("results").value = "Please wait while we fetch your results . . .";
+              const url = `/scan/${startBlock}/${endBlock}/${rpcAddress}`;
+              console.log(`Calling ${url}`);
+              let res = await fetch(`/scan/${startBlock}/${endBlock}/${encodeURIComponent(rpcAddress)}`, options);
+              let resJson = await res.json();
+              console.log(`Attempt: Success --  Block Number: ${resJson.block}`);
+              
+              document.getElementById("results").value = JSON.stringify(resJson);
+          } catch (e) {
+              console.log("Attempt: Failed", e);
+              document.getElementById("results").value = "We were not able to get your results at this time. Please check your parameters and try again";
+              document.getElementById("submit").disabled = false;
+          }
+      }
+
+    </script>
+    <div id="pageheader">
+        <div id="menu">
+            <a id="reactjs" href="https://polkadot-scanner-matt-heff.netlify.app/" target="_blank">ReactJS Scanner</a> | <a id="logout" href="/logout">Logout</a>
+        </div>
+        <h1>Polkadot Scanner</h1>
+    </div>
+    <div id="pagebody">
+        <div id="inputs">
+            <label for="startBlock">Start Block: </label><input type="text" name="startBlock" id="startBlock" width="75px" value="0">
+            </br>
+            <label for="startBlock">End Block: </label><input type="text" name="endBloc" id="endBlock" width="75px" value="0">
+            </br>
+            <label for="startBlock">RPC Address: </label><input type="text" id="rpcAddress" name="rpcAddress" width="100px" value="wss://rpc.polkadot.io">
+            </br>
+            <input type="button" id="submit" value="Scan" onclick="submitClick()" disabled/>
+        </div>
+
+        <div id="resultsContainer">
+            <textarea id="results">Please wait while we fetch the latest block number.
+            </textarea>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

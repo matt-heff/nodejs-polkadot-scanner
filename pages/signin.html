@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login for polkadot scanning</title>
+  </head>
+  <body></body>
+</html>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Form</title>
+  </head>
+  <body>
+    <style>
+      form {
+        text-align: center;
+      }
+      body input {
+        margin: 10px;
+      }
+      #submit {
+        margin: 10px;
+      }
+      #resultsContainer textarea {
+        width: 600px;
+        height: 400px;
+      }
+    </style>
+    <form action="/scanner" method="post">
+      <!-- user input-->
+      Enter Secret Code:<br />
+      <input
+        type="text"
+        name="secretcode"
+        placeholder="Enter Secret Code - test"
+        width="100px"
+        required
+      /><br /><br />
+      <!-- submit button -->
+      <input id="submit" type="submit" value="login" />
+      <br />
+      <br />
+      <a
+        id="reactjs"
+        href="https://polkadot-scanner-matt-heff.netlify.app/"
+        target="_blank"
+        >ReactJS Scanner ( External Site )</a
+      >
+    </form>
+  </body>
+</html>
